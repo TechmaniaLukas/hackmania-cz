@@ -26,7 +26,9 @@ const tierLabel = {
 const tierOrder: (keyof typeof tierLabel)[] = ["platinum", "gold", "silver", "bronze"];
 
 export default async function PartneriPage() {
-  const partners = await fetchQuery(api.partners.list, {});
+  // fetchQuery vyžaduje NEXT_PUBLIC_CONVEX_URL. Když chybí (build před nastavením
+  // env var ve Vercelu), vrátíme prázdné pole místo crashe.
+  const partners = await fetchQuery(api.partners.list, {}).catch(() => []);
   const byTier = Object.fromEntries(
     tierOrder.map((t) => [t, partners.filter((p) => p.tier === t)])
   );
