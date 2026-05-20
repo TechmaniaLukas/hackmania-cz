@@ -27,6 +27,20 @@ export function formatDate(ts: number): string {
   return `${d.getDate()}. ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+/**
+ * Status hackathonu/akce počítaný runtime z dat — hardcoded `status` v DB
+ * zastará, jakmile reálný termín mine. Toto je zdroj pravdy pro UI.
+ */
+export function deriveStatus(
+  startDate: number,
+  endDate: number,
+  now: number = Date.now()
+): "upcoming" | "ongoing" | "past" {
+  if (now < startDate) return "upcoming";
+  if (now > endDate) return "past";
+  return "ongoing";
+}
+
 export function relativeTime(ts: number): string {
   const diff = Date.now() - ts;
   const h = Math.floor(diff / 3_600_000);

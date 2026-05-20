@@ -15,8 +15,9 @@ export default function HackathonsPage() {
   const [topic, setTopic] = useState<string>("");
   const [city, setCity] = useState<string>("");
 
-  const hackathons = useQuery(api.hackathons.list, {}) ?? [];
-  const loading = useQuery(api.hackathons.list, {}) === undefined;
+  const data = useQuery(api.hackathons.list, {});
+  const loading = data === undefined;
+  const hackathons = data ?? [];
   const allTopics = useMemo(
     () => Array.from(new Set(hackathons.flatMap((h) => h.topics))).sort(),
     [hackathons]
@@ -26,6 +27,9 @@ export default function HackathonsPage() {
     [hackathons]
   );
 
+  // Server (convex/hackathons.list) už dodává status derived z dat
+  // a hackathony seřazené (nadcházející asc, uplynulé desc). Klient
+  // dělá jen filtr.
   const filtered = useMemo(() => {
     return hackathons.filter((h) => {
       if (status !== "all" && h.status !== status) return false;
