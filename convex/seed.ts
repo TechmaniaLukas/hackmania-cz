@@ -390,7 +390,115 @@ const HACKATHONS = [
     status: "past" as const,
   },
 
-  // (Demo "Hackmania Praha 2025" odebrán — všechny hackathony jsou reálné.)
+  // ── ŠKOLNÍ SOUTĚŽE A OLYMPIÁDY S AI/TECH PŘESAHEM ────────────────────────
+  // Nejsou to klasické 24/48h hackathony, ale tematicky i formátem to do
+  // katalogu patří (středoškolské týmy, prizes, AI/tech).
+  {
+    slug: "nachytej-ai-2026",
+    name: "Nachytej AI 2026",
+    description:
+      "Celostátní školní soutěž AI projektů pro ZŠ a SŠ. Druhý ročník — pro 400+ školních týmů.",
+    longDescription:
+      "Žáci a studenti tvoří projekty s využitím AI (chatbot, video, audio, infografika, interaktivní web) a kriticky hodnotí výstupy. Vyhlášení na Maker Faire Prague.",
+    city: "online + Praha",
+    venue: "Maker Faire Prague (vyhlášení)",
+    startDate: d("2026-03-02T09:00:00"),
+    endDate: d("2026-05-09T22:00:00"),
+    websiteUrl: "https://www.nachytejai.cz/",
+    topics: [
+      "AI ve vzdělávání",
+      "Chatbot",
+      "Kritické hodnocení AI",
+      "Studentské",
+    ],
+    organizer: "Nadace O2",
+    prizePool:
+      "Kategorie: vzdělávací přínos, originalita, odhalená chyba AI (ceny od Nadace O2 a partnerů)",
+    isOnline: true,
+    featured: false,
+    status: "past" as const,
+  },
+  {
+    slug: "technologicka-olympiada-2025",
+    name: "Technologická olympiáda 2025",
+    description:
+      "Středoškolská olympiáda s důrazem na AI, kyberbezpečnost, 3D tisk a longevity. Týmy až 3 studenti.",
+    longDescription:
+      "Online školní kolo + finále na FEL ČVUT. Očekáváno cca 1 500 studentů, do finále postupuje 25 týmů.",
+    city: "Praha",
+    venue: "FEL ČVUT",
+    startDate: d("2025-03-19T09:00:00"),
+    endDate: d("2025-03-28T18:00:00"),
+    websiteUrl:
+      "https://fel.cvut.cz/cs/aktualne/novinky/36795-ai-kyberbezpecnost-ale-i-3d-tisk-a-longevity-studenti-opet-mohou-zmerit-sve-sily-v-technologicke-olympiade",
+    topics: [
+      "AI",
+      "Kyberbezpečnost",
+      "3D tisk",
+      "Longevity",
+      "Elektromobilita",
+      "Kryptoměny",
+    ],
+    organizer: "FEL ČVUT",
+    prizePool: "30 000 Kč + přijetí na FEL ČVUT bez přijímaček",
+    isOnline: false,
+    featured: false,
+    status: "past" as const,
+  },
+  {
+    slug: "technologicka-olympiada-2024",
+    name: "Technologická olympiáda 2024",
+    description:
+      "Středoškolská olympiáda s výrazným AI zaměřením. Online školní kolo + finále na FEL ČVUT.",
+    longDescription:
+      "Předchozí ročník měl přes 1 600 přihlášených studentů. Do finále 25 týmů (až 3 studenti).",
+    city: "Praha",
+    venue: "FEL ČVUT",
+    startDate: d("2024-03-22T09:00:00"),
+    endDate: d("2024-04-12T18:00:00"),
+    websiteUrl:
+      "https://fel.cvut.cz/cs/aktualne/novinky/33259-ai-elektromobilita-i-kyberbezpecnost-technologicka-olympiada-2024-zve-stredoskolaky-k-soutezeni-v-nejaktualnejsich-trendech",
+    topics: [
+      "AI",
+      "Elektromobilita",
+      "Kyberbezpečnost",
+      "Udržitelnost",
+      "3D tisk",
+      "Kryptoměny",
+    ],
+    organizer: "FEL ČVUT",
+    prizePool: "30 000 Kč + přijetí na FEL ČVUT bez přijímaček",
+    isOnline: false,
+    featured: false,
+    status: "past" as const,
+  },
+  {
+    slug: "elektrotechnicka-olympiada-2025",
+    name: "Elektrotechnická olympiáda 2025",
+    description:
+      "Tradiční soutěž FEL ČVUT pro středoškoláky — elektronika, IT, AI, technický projekt.",
+    longDescription:
+      "Registrace do 15. 11. 2025, finále 18. 12. 2025 na FEL ČVUT. AI je výslovně zahrnutá mezi oblasti zájmu.",
+    city: "Praha",
+    venue: "FEL ČVUT, Praha-Dejvice",
+    startDate: d("2025-11-15T09:00:00"),
+    endDate: d("2025-12-18T18:00:00"),
+    websiteUrl:
+      "https://fel.cvut.cz/cs/aktualne/novinky/81790-bavi-vas-elektrotechnika-informatika-nebo-ai-prihlaste-se-na-elektrotechnickou-olympiadu",
+    topics: [
+      "Elektrotechnika",
+      "Elektronika",
+      "IT",
+      "AI",
+      "Technický projekt",
+    ],
+    organizer: "FEL ČVUT",
+    prizePool:
+      "Poukázky na elektroniku pro první tři + soutěž o 20 000 Kč v hotovosti",
+    isOnline: false,
+    featured: false,
+    status: "past" as const,
+  },
 ];
 
 // ────────────────────────────────────────────────────────────────────────────
