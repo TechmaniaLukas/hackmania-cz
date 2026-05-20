@@ -58,6 +58,7 @@ export default function SkolyPage() {
       .sort((a, b) => (b.hackathonsHosted ?? 0) - (a.hackathonsHosted ?? 0));
   }, [schools, q, type, region]);
 
+  const loading = data === undefined;
   const stats = {
     uni: schools.filter((s) => s.type === "university").length,
     hs: schools.filter((s) => s.type === "highschool").length,
@@ -170,7 +171,7 @@ export default function SkolyPage() {
             );
           })}
         </div>
-        {filtered.length === 0 && (
+        {!loading && filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-[var(--color-line)] p-16 text-center text-[var(--color-muted)]">
             Nic jsme nenašli. Zkus uvolnit filtry.
           </div>

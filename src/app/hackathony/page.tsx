@@ -98,14 +98,24 @@ export default function HackathonsPage() {
           )}
         </div>
 
-        <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((h) => (
-            <HackathonCard key={h.slug} h={h} />
-          ))}
-        </div>
-        {filtered.length === 0 && (
+        {loading ? (
+          <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-64 rounded-2xl border border-[var(--color-line)] bg-[var(--color-ink-2)] animate-pulse"
+              />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="mt-20 rounded-2xl border border-dashed border-[var(--color-line)] p-16 text-center text-[var(--color-muted)]">
             Nic jsme nenašli. Zkus uvolnit filtry.
+          </div>
+        ) : (
+          <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((h) => (
+              <HackathonCard key={h.slug} h={h} />
+            ))}
           </div>
         )}
       </section>
