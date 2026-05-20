@@ -12,14 +12,14 @@ import {
   Users,
   Wifi,
 } from "lucide-react";
-import { events, eventTypeLabels } from "@/lib/mock-data";
+import { eventTypeLabels } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../../convex/_generated/api";
 import { formatDate, formatDateRange } from "@/lib/utils";
 import { EventCard } from "@/components/EventCard";
 import { ShareButtons } from "@/components/ShareButtons";
 
-export function generateStaticParams() {
-  return events.map((e) => ({ slug: e.slug }));
-}
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -27,7 +27,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const ev = events.find((e) => e.slug === slug);
+  const ev = await fetchQuery(api.events.getBySlug, { slug }).catch(() => null);
   if (!ev) return { title: "Akce nenalezena — Hackmania" };
   return {
     title: ev.name,
@@ -50,10 +50,13 @@ export default async function EventDetail({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const ev = events.find((e) => e.slug === slug);
+  const [ev, allEvents] = await Promise.all([
+    fetchQuery(api.events.getBySlug, { slug }).catch(() => null),
+    fetchQuery(api.events.list, { limit: 50 }).catch(() => []),
+  ]);
   if (!ev) notFound();
 
-  const related = events.filter((x) => x.slug !== ev.slug && x.startDate > Date.now()).slice(0, 3);
+  const related = allEvents.filter((x) => x.slug !== ev.slug && x.startDate > Date.now()).slice(0, 3);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",

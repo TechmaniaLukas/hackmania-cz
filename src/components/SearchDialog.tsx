@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
 import { Search, Calendar, Newspaper, GraduationCap, Building2, Trophy, X } from "lucide-react";
-import { hackathons, events, news, schools } from "@/lib/mock-data";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { formatDate } from "@/lib/utils";
 
 export function SearchTriggerButton() {
@@ -47,6 +48,12 @@ export function SearchTriggerButton() {
 function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const router = useRouter();
   const [value, setValue] = useState("");
+
+  // Načítáme jen když je dialog otevřený — šetříme bandwidth.
+  const hackathons = useQuery(api.hackathons.list, open ? {} : "skip") ?? [];
+  const events = useQuery(api.events.list, open ? { limit: 50 } : "skip") ?? [];
+  const news = useQuery(api.news.list, open ? { limit: 20 } : "skip") ?? [];
+  const schools = useQuery(api.schools.list, open ? undefined : "skip") ?? [];
 
   useEffect(() => {
     if (!open) setValue("");

@@ -2,15 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, ExternalLink, MapPin, Trophy, Users, Wifi, CalendarPlus } from "lucide-react";
-import { hackathons } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../../convex/_generated/api";
 import { formatDateRange } from "@/lib/utils";
 import { HackathonCard } from "@/components/HackathonCard";
 import { HackathonRecap } from "@/components/HackathonRecap";
 import { ShareButtons } from "@/components/ShareButtons";
 
-export function generateStaticParams() {
-  return hackathons.map((h) => ({ slug: h.slug }));
-}
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -18,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const h = hackathons.find((x) => x.slug === slug);
+  const h = await fetchQuery(api.hackathons.getBySlug, { slug }).catch(() => null);
   if (!h) return { title: "Hackathon nenalezen — Hackmania" };
   return {
     title: h.name,
@@ -37,11 +36,14 @@ export async function generateMetadata({
 
 export default async function HackathonDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const h = hackathons.find((x) => x.slug === slug);
+  const [h, allHackathons] = await Promise.all([
+    fetchQuery(api.hackathons.getBySlug, { slug }).catch(() => null),
+    fetchQuery(api.hackathons.list, {}).catch(() => []),
+  ]);
   if (!h) notFound();
 
   const isPast = h.status === "past";
-  const related = hackathons
+  const related = allHackathons
     .filter((x) => x.slug !== h.slug)
     .filter((x) => (isPast ? x.status === "past" : x.status !== "past"))
     .slice(0, 3);

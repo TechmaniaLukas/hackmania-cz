@@ -1,13 +1,16 @@
-import { hackathons } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../../../convex/_generated/api";
 import { buildIcs } from "@/lib/ics";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const h = hackathons.find((x) => x.slug === slug);
+  const h = await fetchQuery(api.hackathons.getBySlug, { slug }).catch(() => null);
   if (!h) notFound();
 
   const ics = buildIcs({
@@ -29,8 +32,4 @@ export async function GET(
       "Cache-Control": "public, max-age=3600",
     },
   });
-}
-
-export function generateStaticParams() {
-  return hackathons.map((h) => ({ slug: h.slug }));
 }

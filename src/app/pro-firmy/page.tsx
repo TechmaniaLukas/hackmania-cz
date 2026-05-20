@@ -14,8 +14,16 @@ import {
   Download,
   Quote,
 } from "lucide-react";
-import { hackathons } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../convex/_generated/api";
 import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
+
+type Winner = {
+  place: 1 | 2 | 3 | "special";
+  teamName: string;
+  projectName: string;
+  oneLiner?: string;
+};
 
 const title = "Pro firmy · partnerství";
 const description =
@@ -29,16 +37,19 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title, description, images: ["/twitter-image"] },
 };
 
-const hm2025 = hackathons.find((h) => h.slug === "hackmania-praha-2025");
-const winners2025 = hm2025?.recap?.winners.filter((w) => w.place !== "special").slice(0, 3) ?? [];
+export default async function ProFirmyPage() {
+  const hm2025 = await fetchQuery(api.hackathons.getBySlug, {
+    slug: "hackmania-praha-2025",
+  }).catch(() => null);
+  const winners2025: Winner[] =
+    hm2025?.recap?.winners.filter((w) => w.place !== "special").slice(0, 3) ?? [];
 
-export default function ProFirmyPage() {
   return (
     <>
       <Hero />
       <WaysToEngage />
       <ProofNumbers />
-      <WinnerSpotlight />
+      <WinnerSpotlight winners={winners2025} />
       <Testimonial />
       <TrustSignals />
       <Packages />
@@ -180,8 +191,8 @@ function ProofNumbers() {
   );
 }
 
-function WinnerSpotlight() {
-  if (winners2025.length === 0) return null;
+function WinnerSpotlight({ winners }: { winners: Winner[] }) {
+  if (winners.length === 0) return null;
   return (
     <section className="mx-auto max-w-6xl px-6 py-24">
       <div className="text-xs uppercase tracking-[0.3em] text-[var(--color-brand-2)]">Co vzniká</div>
@@ -193,7 +204,7 @@ function WinnerSpotlight() {
         novém startupu.
       </p>
       <div className="mt-10 grid gap-5 md:grid-cols-3">
-        {winners2025.map((w) => (
+        {winners.map((w) => (
           <article
             key={w.teamName}
             className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-ink-2)] p-6"

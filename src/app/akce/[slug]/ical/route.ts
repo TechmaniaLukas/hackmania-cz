@@ -1,13 +1,16 @@
-import { events } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../../../convex/_generated/api";
 import { buildIcs } from "@/lib/ics";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const ev = events.find((x) => x.slug === slug);
+  const ev = await fetchQuery(api.events.getBySlug, { slug }).catch(() => null);
   if (!ev) notFound();
 
   const ics = buildIcs({
@@ -17,7 +20,7 @@ export async function GET(
     location: ev.venue ? `${ev.venue}, ${ev.city}` : ev.city,
     url: `https://hackmania.cz/akce/${ev.slug}`,
     start: ev.startDate,
-    end: ev.endDate ?? ev.startDate + 60 * 60 * 1000, // fallback 1h
+    end: ev.endDate ?? ev.startDate + 60 * 60 * 1000,
     organizer: { name: ev.organizer },
   });
 
@@ -29,8 +32,4 @@ export async function GET(
       "Cache-Control": "public, max-age=3600",
     },
   });
-}
-
-export function generateStaticParams() {
-  return events.map((e) => ({ slug: e.slug }));
 }

@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
-import { hackathons, events } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../convex/_generated/api";
 
 const BASE = "https://hackmania.cz";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const staticPages = [
     "",
@@ -27,6 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "weekly" as const,
     priority: p === "" ? 1 : 0.8,
   }));
+
+  // Build je tolerantní — při chybějícím Convex URL vrátíme prázdné pole.
+  const [hackathons, events] = await Promise.all([
+    fetchQuery(api.hackathons.list, {}).catch(() => []),
+    fetchQuery(api.events.list, { limit: 200 }).catch(() => []),
+  ]);
 
   const hackathonPages = hackathons.map((h) => ({
     url: `${BASE}/hackathony/${h.slug}`,

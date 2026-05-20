@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Sparkles, Code2, Cpu, Rocket, Users } from "lucide-react";
-import { hackathons, news, partners, events } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../convex/_generated/api";
+import type { Doc } from "../../convex/_generated/dataModel";
 import { HackathonCard } from "@/components/HackathonCard";
 import { NewsCard } from "@/components/NewsCard";
 import { QrCard } from "@/components/QrCard";
@@ -44,7 +46,16 @@ const FAQ_JSONLD = {
   })),
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Build je tolerantní k chybějícím env vars — `.catch(() => [])` zajistí, že
+  // Vercel build neselže, když NEXT_PUBLIC_CONVEX_URL ještě není nastavený.
+  const [hackathons, news, partners, events] = await Promise.all([
+    fetchQuery(api.hackathons.list, {}).catch(() => [] as Awaited<ReturnType<typeof fetchQuery<typeof api.hackathons.list>>>),
+    fetchQuery(api.news.list, { limit: 20 }).catch(() => [] as Awaited<ReturnType<typeof fetchQuery<typeof api.news.list>>>),
+    fetchQuery(api.partners.list, {}).catch(() => [] as Awaited<ReturnType<typeof fetchQuery<typeof api.partners.list>>>),
+    fetchQuery(api.events.list, { limit: 50 }).catch(() => [] as Awaited<ReturnType<typeof fetchQuery<typeof api.events.list>>>),
+  ]);
+
   const featuredHackathons = hackathons.filter((h) => h.featured && h.status !== "past").slice(0, 3);
   const featuredNews = news.filter((n) => n.featured).slice(0, 3);
   const upcomingCount = hackathons.filter((h) => h.status === "upcoming").length;
@@ -60,7 +71,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
       />
       <Hero upcomingCount={upcomingCount} />
-      <PartnerMarquee />
+      <PartnerMarquee partners={partners} />
       <FeaturedHackathons items={featuredHackathons} />
       <HowItWorks />
       <UpcomingEvents items={upcomingEvents} />
@@ -98,7 +109,7 @@ function FAQ() {
   );
 }
 
-function UpcomingEvents({ items }: { items: typeof events }) {
+function UpcomingEvents({ items }: { items: Doc<"events">[] }) {
   if (items.length === 0) return null;
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
@@ -174,7 +185,7 @@ function Hero({ upcomingCount }: { upcomingCount: number }) {
   );
 }
 
-function PartnerMarquee() {
+function PartnerMarquee({ partners }: { partners: { name: string }[] }) {
   const doubled = [...partners, ...partners];
   return (
     <section className="border-y border-[var(--color-line)] bg-[var(--color-ink-2)] py-8 overflow-hidden">
@@ -197,7 +208,7 @@ function PartnerMarquee() {
   );
 }
 
-function FeaturedHackathons({ items }: { items: typeof hackathons }) {
+function FeaturedHackathons({ items }: { items: Doc<"hackathons">[] }) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <SectionHeader
@@ -253,7 +264,7 @@ function HowItWorks() {
   );
 }
 
-function FeaturedNews({ items }: { items: typeof news }) {
+function FeaturedNews({ items }: { items: Doc<"news">[] }) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <SectionHeader
