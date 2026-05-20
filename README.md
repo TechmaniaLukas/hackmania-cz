@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hackmania.cz
 
-## Getting Started
+Portál českých hackathonů, workshopů a AI novinek. Next.js 15 + Convex + Tailwind.
 
-First, run the development server:
+## Rychlý start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Aplikace poběží na <http://localhost:3000>. Katalog teď zobrazuje mock data z
+`src/lib/mock-data.ts` — pro napojení na Convex viz níže.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Struktura
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app/` — App Router stránky
+  - `page.tsx` — landing
+  - `hackathony/` — katalog + detail `[slug]`
+  - `novinky/` — agregované novinky s filtrováním podle kategorie
+  - `partneri/`, `akce/`, `skoly/`, `o-nas/`, `kontakt/`
+- `src/components/` — `HackathonCard`, `NewsCard`
+- `src/lib/mock-data.ts` — dočasná data (ke smazání po napojení Convex)
+- `src/lib/utils.ts` — `cn`, `formatDate`, `relativeTime`
+- `convex/schema.ts` — tabulky: `hackathons`, `partners`, `schools`, `events`, `news`
+- `convex/*.ts` — queries (`hackathons.list`, `news.list`, …)
+- `convex/newsAggregator.ts` — Node action, která parsuje RSS feedy
+- `convex/newsMutations.ts` — vkládání novinek (deduplikace přes slug)
+- `convex/crons.ts` — cron spouští agregátor každé 2 hodiny
 
-## Learn More
+## Napojení Convex
 
-To learn more about Next.js, take a look at the following resources:
+1. Přihlas se a vytvoř deployment:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npx convex dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   Při prvním spuštění tě to provede přihlášením a vyplní
+   `NEXT_PUBLIC_CONVEX_URL` do `.env.local`.
 
-## Deploy on Vercel
+2. Ve frontendu nahraď importy z `mock-data` reálnými queries:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```tsx
+   import { useQuery } from "convex/react";
+   import { api } from "../../convex/_generated/api";
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   const hackathons = useQuery(api.hackathons.list, { status: "upcoming" });
+   ```
+
+   Obal komponenty `ConvexProvider` v `app/layout.tsx`:
+
+   ```tsx
+   import { ConvexProvider, ConvexReactClient } from "convex/react";
+   const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+   ```
+
+3. Naplň databázi buď přes Convex dashboard, nebo mutací.
+
+## Agregátor novinek
+
+`convex/newsAggregator.ts` načítá RSS feedy (Anthropic, HuggingFace, DeepMind,
+TechCrunch, Lupa.cz, Zdroják). Seznam upravíš v poli `FEEDS`. Cron v `crons.ts`
+spouští agregaci každé 2 hodiny. Deduplikace běží přes slug z titulku.
+
+## Deploy
+
+- Frontend: Vercel (Next.js preset).
+- Convex: automaticky při `npx convex deploy`.
+- Doména `hackmania.cz` → nasměruj CNAME na Vercel.
+
+## Co zbývá dodělat
+
+- [ ] Napojit stránky na Convex queries (zatím mock data).
+- [ ] Doplnit `ConvexProvider` do root layoutu.
+- [ ] Přidat scraper pro aktuální hackathony (zdroje: Eventbrite ČR, stránky VŠ).
+- [ ] Stránka workshop/event detail.
+- [ ] Stránka `/skoly` s mapou a filtrem podle kraje.
+- [ ] SEO: sitemap, robots, strukturovaná data (Event schema.org).

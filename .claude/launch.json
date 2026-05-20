@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js dev server",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "Convex dev (backend watcher)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["convex", "dev"],
+      "port": 0,
+      "autoPort": true
+    }
+  ]
+}

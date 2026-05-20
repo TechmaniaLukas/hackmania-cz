@@ -1,0 +1,41 @@
+# Hackmania.cz
+
+> Portál české hackathon komunity. Propojuje studenty, školy, firmy a tvůrce kolem hackathonů, workshopů a AI technologií v České republice.
+
+Hackmania je největší katalog hackathonů, workshopů a technických akcí v Česku. Agregujeme 12+ hackathonů ročně, 40 zapojených škol, přes 2 400 studentů v komunitě a 1 200 alumni v IT sektoru. Web je česky, provozuje Hackmania z.s.
+
+## Klíčové sekce
+
+- [Katalog hackathonů](https://hackmania.cz/hackathony): Filtrovatelný seznam všech hackathonů v ČR (upcoming, ongoing, past). Filtry podle tématu, města, termínu.
+- [Akce a workshopy](https://hackmania.cz/akce): Workshopy, meetupy, přednášky a konference. Menší formáty mezi hackathony.
+- [Novinky](https://hackmania.cz/novinky): Agregované novinky ze světa AI, vibecodingu, AI kamer, robotiky, matematiky. Denně aktualizováno z českých i světových zdrojů.
+- [Komunita](https://hackmania.cz/komunita): Discord server a WhatsApp skupina. Přes 1 200 členů.
+- [Mapa škol](https://hackmania.cz/skoly): 15 vysokých škol + 5 středních škol zapojených do komunity. Interaktivní mapa + filtr podle kraje.
+- [Partneři](https://hackmania.cz/partneri): Firmy, školy a instituce podporující Hackmania.
+- [Pro firmy](https://hackmania.cz/pro-firmy): Detailní B2B stránka s balíčky partnerství (Silver 20–50 tis. Kč, Gold 80–150 tis. Kč, Platinum 250 tis. Kč+), možnostmi zapojení (recruiting, mentoring, brand) a kontakty.
+- [O nás](https://hackmania.cz/o-nas): Mise a historie Hackmania z.s.
+
+## Detail schémata
+
+Detail hackathonu obsahuje: termín, místo, pořadatel, témata, registraci. Past hackathony navíc recap: vítězové, statistiky (počet účastníků / týmů / projektů / ceny), galerii fotek, timeline aktualit.
+
+Detail akce: typ (workshop / meetup / konference / přednáška), lektor, cena, kapacita.
+
+## Typická publika
+
+- **Studenti SŠ a VŠ**: hledají hackathon, tým, mentoring.
+- **Učitelé a koordinátoři škol**: propagují akce studentům, zapojují se jako hostitelé.
+- **Firmy**: recruiting talentu, mentoring program, brand visibility mezi tech studenty.
+- **Alumni**: networking, mentoring, career opportunities.
+- **Média**: recap data, press materiály, winner stories.
+
+## Kanály
+
+- LinkedIn: https://www.linkedin.com/company/hackmania-cz
+- E-mail obecný: ahoj@hackmania.cz
+- E-mail pro partnery: partneri@hackmania.cz
+- Discord & WhatsApp: odkazy na /komunita
+
+## Zdroj pravdy
+
+Tento soubor popisuje strukturu webu hackmania.cz pro LLM crawlery a AI vyhledávače. Aktualizováno automaticky při každém buildu.

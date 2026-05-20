@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --app --src-dir --eslint --import-alias \"@/*\" --use-npm --no-turbopack --yes)",
+      "Bash(npm init *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\);p.name='hackmania';require\\('fs'\\).writeFileSync\\('package.json',JSON.stringify\\(p,null,2\\)\\)\")",
+      "Bash(rm -f \"C:/Users/lukas.suser/Hackmania/package.json\")",
+      "Read(//c/Users/lukas.suser/**)",
+      "Bash(npx --yes create-next-app@latest hackmania-tmp --typescript --tailwind --app --src-dir --eslint --import-alias \"@/*\" --use-npm --no-turbopack --yes)",
+      "Bash(shopt -s dotglob)",
+      "Bash(mv hackmania-tmp/* Hackmania/)",
+      "Bash(rmdir hackmania-tmp *)",
+      "Bash(npm install *)",
+      "Bash(rm -rf .next)",
+      "Bash(npx next *)",
+      "Bash(echo \"PID: $!\" sleep 6 curl -s -o /dev/null -w \"landing: %{http_code}\\\\n\" http://localhost:3123/ curl -s -o /dev/null -w \"hackathony: %{http_code}\\\\n\" http://localhost:3123/hackathony curl -s -o /dev/null -w \"detail: %{http_code}\\\\n\" http://localhost:3123/hackathony/hackmania-praha-2026 curl -s -o /dev/null -w \"novinky: %{http_code}\\\\n\" http://localhost:3123/novinky curl -s -o /dev/null -w \"partneri: %{http_code}\\\\n\" http://localhost:3123/partneri curl -s -o /dev/null -w \"o-nas: %{http_code}\\\\n\" http://localhost:3123/o-nas curl -s http://localhost:3123/)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(taskkill //PID 36812 //F)",
+      "Bash(node -e \"try{require.resolve\\('pptxgenjs'\\); console.log\\('pptxgenjs OK'\\)}catch\\(e\\){console.log\\('pptxgenjs missing'\\)}\")",
+      "Bash(where.exe soffice *)",
+      "Bash(node scripts/build-partner-deck.js)",
+      "Bash(python \"C:/Users/lukas.suser/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/f17a856c-7c74-4176-a850-c3ba49368c90/ad3c3e94-f905-4e30-9f0b-91ae0a7d0e60/skills/pptx/scripts/office/soffice.py\" --headless --convert-to pdf --outdir \"C:/Users/lukas.suser/Hackmania/public\" \"C:/Users/lukas.suser/Hackmania/public/hackmania-partner-deck.pptx\")",
+      "Bash(awk '{print $5, $9}')"
+    ]
+  }
+}
