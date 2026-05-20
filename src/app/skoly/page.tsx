@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { MapPin, Building2, GraduationCap, Trophy, Search } from "lucide-react";
-import { schools, type School } from "@/lib/mock-data";
+import { type School } from "@/lib/mock-data";
 
 const SchoolsMap = dynamic(
   () => import("@/components/SchoolsMap").then((m) => m.SchoolsMap),
@@ -24,13 +26,18 @@ const typeLabels: Record<School["type"], string> = {
 };
 type TypeFilter = "all" | School["type"];
 
-const allRegions = Array.from(new Set(schools.map((s) => s.region))).sort();
-
 export default function SkolyPage() {
   const [q, setQ] = useState("");
   const [type, setType] = useState<TypeFilter>("all");
   const [region, setRegion] = useState("");
   const [focused, setFocused] = useState<string | undefined>();
+
+  const data = useQuery(api.schools.list);
+  const schools = useMemo(() => data ?? [], [data]);
+  const allRegions = useMemo(
+    () => Array.from(new Set(schools.map((s) => s.region))).sort(),
+    [schools]
+  );
 
   const filtered = useMemo(() => {
     return schools
@@ -49,7 +56,7 @@ export default function SkolyPage() {
         return true;
       })
       .sort((a, b) => (b.hackathonsHosted ?? 0) - (a.hackathonsHosted ?? 0));
-  }, [q, type, region]);
+  }, [schools, q, type, region]);
 
   const stats = {
     uni: schools.filter((s) => s.type === "university").length,

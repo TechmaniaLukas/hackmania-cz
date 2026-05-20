@@ -6,6 +6,7 @@ import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
 import { MobileNav } from "@/components/MobileNav";
 import { SearchTriggerButton } from "@/components/SearchDialog";
 import { CookieBanner } from "@/components/CookieBanner";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin", "latin-ext"] });
@@ -101,11 +102,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
         />
-        <a href="#main" className="skip-link">Přeskočit na obsah</a>
-        <SiteHeader />
-        <main id="main" className="flex-1">{children}</main>
-        <SiteFooter />
-        <CookieBanner />
+        <Providers>
+          <a href="#main" className="skip-link">Přeskočit na obsah</a>
+          <SiteHeader />
+          <main id="main" className="flex-1">{children}</main>
+          <SiteFooter />
+          <CookieBanner />
+        </Providers>
       </body>
     </html>
   );

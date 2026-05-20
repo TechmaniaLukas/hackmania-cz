@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { partners } from "@/lib/mock-data";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../convex/_generated/api";
 
 const title = "Partneři a školy";
 const description =
@@ -24,7 +25,8 @@ const tierLabel = {
 
 const tierOrder: (keyof typeof tierLabel)[] = ["platinum", "gold", "silver", "bronze"];
 
-export default function PartneriPage() {
+export default async function PartneriPage() {
+  const partners = await fetchQuery(api.partners.list, {});
   const byTier = Object.fromEntries(
     tierOrder.map((t) => [t, partners.filter((p) => p.tier === t)])
   );

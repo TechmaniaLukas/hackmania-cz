@@ -106,7 +106,6 @@ export default defineSchema({
     type: v.union(
       v.literal("university"),
       v.literal("highschool"),
-      v.literal("primary"),
       v.literal("other")
     ),
     websiteUrl: v.optional(v.string()),
@@ -127,8 +126,7 @@ export default defineSchema({
       v.literal("workshop"),
       v.literal("meetup"),
       v.literal("conference"),
-      v.literal("prednaska"),
-      v.literal("other")
+      v.literal("prednaska")
     ),
     city: v.string(),
     venue: v.optional(v.string()),

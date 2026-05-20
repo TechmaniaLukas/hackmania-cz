@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { events, eventTypeLabels, type EventItem } from "@/lib/mock-data";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { eventTypeLabels, type EventItem } from "@/lib/mock-data";
 import { EventCard } from "@/components/EventCard";
 import { Search } from "lucide-react";
 
-const allCities = Array.from(new Set(events.map((e) => e.city))).sort();
 type TypeFilter = "all" | EventItem["type"];
 type TimeFilter = "upcoming" | "past" | "all";
 
@@ -14,6 +15,14 @@ export default function AkcePage() {
   const [time, setTime] = useState<TimeFilter>("upcoming");
   const [type, setType] = useState<TypeFilter>("all");
   const [city, setCity] = useState<string>("");
+
+  const data = useQuery(api.events.list, { limit: 200 });
+  const events = data ?? [];
+  const loading = data === undefined;
+  const allCities = useMemo(
+    () => Array.from(new Set(events.map((e) => e.city))).sort(),
+    [events]
+  );
 
   const filtered = useMemo(() => {
     const now = Date.now();
@@ -45,7 +54,7 @@ export default function AkcePage() {
         if (aPast !== bPast) return aPast ? 1 : -1; // upcoming first
         return aPast ? b.startDate - a.startDate : a.startDate - b.startDate;
       });
-  }, [q, time, type, city]);
+  }, [events, q, time, type, city]);
 
   return (
     <>
@@ -121,8 +130,14 @@ export default function AkcePage() {
         </div>
 
         <div className="mt-4 text-sm text-[var(--color-muted)]">
-          Nalezeno <span className="text-white font-semibold">{filtered.length}</span>{" "}
-          {filtered.length === 1 ? "akce" : filtered.length < 5 ? "akce" : "akcí"}
+          {loading ? (
+            "Načítám akce…"
+          ) : (
+            <>
+              Nalezeno <span className="text-white font-semibold">{filtered.length}</span>{" "}
+              {filtered.length === 1 ? "akce" : filtered.length < 5 ? "akce" : "akcí"}
+            </>
+          )}
         </div>
 
         <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">

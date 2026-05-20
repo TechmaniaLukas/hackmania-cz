@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { news, categoryLabels, type NewsItem } from "@/lib/mock-data";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { type NewsItem } from "@/lib/mock-data";
 import { NewsCard } from "@/components/NewsCard";
 
 type Category = NewsItem["category"] | "all";
@@ -19,6 +21,9 @@ const tabs: { v: Category; l: string }[] = [
 
 export default function NovinkyPage() {
   const [cat, setCat] = useState<Category>("all");
+  const data = useQuery(api.news.list, { limit: 100 });
+  const news = data ?? [];
+  const loading = data === undefined;
   const filtered = cat === "all" ? news : news.filter((n) => n.category === cat);
   const [hero, ...rest] = filtered;
 
@@ -61,7 +66,11 @@ export default function NovinkyPage() {
           ))}
         </div>
 
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="mt-16 rounded-2xl border border-dashed border-[var(--color-line)] p-16 text-center text-[var(--color-muted)]">
+            Načítám novinky…
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="mt-16 rounded-2xl border border-dashed border-[var(--color-line)] p-16 text-center text-[var(--color-muted)]">
             V této kategorii zatím není žádný článek.
           </div>

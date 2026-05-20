@@ -4,18 +4,27 @@
 // the filter state; we export metadata from the nested detail route and rely on
 // the root layout title template. See src/app/hackathony/layout.tsx for page title.
 import { useMemo, useState } from "react";
-import { hackathons } from "@/lib/mock-data";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { HackathonCard } from "@/components/HackathonCard";
 import { Search } from "lucide-react";
-
-const allTopics = Array.from(new Set(hackathons.flatMap((h) => h.topics))).sort();
-const allCities = Array.from(new Set(hackathons.map((h) => h.city))).sort();
 
 export default function HackathonsPage() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"all" | "upcoming" | "ongoing" | "past">("upcoming");
   const [topic, setTopic] = useState<string>("");
   const [city, setCity] = useState<string>("");
+
+  const hackathons = useQuery(api.hackathons.list, {}) ?? [];
+  const loading = useQuery(api.hackathons.list, {}) === undefined;
+  const allTopics = useMemo(
+    () => Array.from(new Set(hackathons.flatMap((h) => h.topics))).sort(),
+    [hackathons]
+  );
+  const allCities = useMemo(
+    () => Array.from(new Set(hackathons.map((h) => h.city))).sort(),
+    [hackathons]
+  );
 
   const filtered = useMemo(() => {
     return hackathons.filter((h) => {
@@ -34,7 +43,7 @@ export default function HackathonsPage() {
       }
       return true;
     });
-  }, [q, status, topic, city]);
+  }, [hackathons, q, status, topic, city]);
 
   return (
     <>
@@ -79,8 +88,14 @@ export default function HackathonsPage() {
         </div>
 
         <div className="mt-4 text-sm text-[var(--color-muted)]">
-          Nalezeno <span className="text-white font-semibold">{filtered.length}</span>{" "}
-          {filtered.length === 1 ? "hackathon" : filtered.length < 5 ? "hackathony" : "hackathonů"}
+          {loading ? (
+            "Načítám hackathony…"
+          ) : (
+            <>
+              Nalezeno <span className="text-white font-semibold">{filtered.length}</span>{" "}
+              {filtered.length === 1 ? "hackathon" : filtered.length < 5 ? "hackathony" : "hackathonů"}
+            </>
+          )}
         </div>
 
         <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
